@@ -1,0 +1,46 @@
+# --- Archivos de Maven necesarios para ejecutar con ./mvnw ---
+!mvnw
+!mvnw.cmd
+!.mvn/wrapper/
+.mvn/repository/
+
+# --- Archivos de compilación ---
+target/
+*.class
+*.jar
+*.war
+*.ear
+dependency-reduced-pom.xml
+
+# --- Configuración del IDE ---
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.project
+.classpath
+.settings/
+
+# --- Logs y Archivos Temporales ---
+*.log
+logs/
+*.tmp
+*.swp
+*.bak
+
+# --- Archivos de cobertura ---
+coverage/
+jacoco.exec
+
+# --- Archivos de Git ---
+*.orig
+
+# --- Archivos de sistema operativo ---
+.DS_Store
+Thumbs.db
+
+# --- Archivos de entorno ---
+.env
+*.env
+
