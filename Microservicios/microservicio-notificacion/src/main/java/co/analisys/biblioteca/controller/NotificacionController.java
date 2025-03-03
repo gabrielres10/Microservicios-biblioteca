@@ -13,7 +13,7 @@ public class NotificacionController {
     private NotificacionService notificacionService;
 
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_NOTIFIER', 'ROLE_LIBRARIAN')")
+    @PreAuthorize("hasAnyRole('ROLE_NOTIFIER', 'ROLE_LIBRARIAN')")
     public void enviarNotificacion(@RequestBody NotificacionDTO notificacion) {
         notificacionService.enviarNotificacion(notificacion);
     }

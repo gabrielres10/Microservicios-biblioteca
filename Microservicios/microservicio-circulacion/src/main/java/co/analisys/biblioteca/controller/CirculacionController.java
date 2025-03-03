@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -20,14 +21,16 @@ public class CirculacionController {
 
     @PostMapping("/prestar")
     @PreAuthorize("hasRole('ROLE_LIBRARIAN')")
-    public void prestarLibro(@RequestParam String usuarioId, @RequestParam String libroId) {
-        circulacionService.prestarLibro(new UsuarioId(usuarioId), new LibroId(libroId));
+    public ResponseEntity<Prestamo> prestarLibro(@RequestParam String usuarioId, @RequestParam String libroId) {
+        Prestamo prestamo = circulacionService.prestarLibro(new UsuarioId(usuarioId), new LibroId(libroId));
+        return ResponseEntity.ok(prestamo);
     }
 
     @PostMapping("/devolver")
     @PreAuthorize("hasRole('ROLE_LIBRARIAN')")
-    public void devolverLibro(@RequestParam String prestamoId) {
-        circulacionService.devolverLibro(new PrestamoId(prestamoId));
+    public ResponseEntity<Prestamo> devolverLibro(@RequestParam String prestamoId) {
+        Prestamo prestamo = circulacionService.devolverLibro(new PrestamoId(prestamoId));
+        return ResponseEntity.ok(prestamo);
     }
 
     @Operation(
@@ -38,12 +41,12 @@ public class CirculacionController {
     )
     @GetMapping("/prestamos")
     @PreAuthorize("hasAnyRole('ROLE_LIBRARIAN', 'ROLE_USER')")
-    public List<Prestamo> obtenerTodosPrestamos() {
-        return circulacionService.obtenerTodosPrestamos();
+    public ResponseEntity<List<Prestamo>> obtenerTodosPrestamos() {
+        return ResponseEntity.ok(circulacionService.obtenerTodosPrestamos());
     }
 
     @GetMapping("/public/status")
-    public String getPublicStatus() {
-        return "El servicio de circulación está funcionando correctamente";
+    public ResponseEntity<String> getPublicStatus() {
+        return ResponseEntity.ok("El servicio de circulación está funcionando correctamente");
     }
 }

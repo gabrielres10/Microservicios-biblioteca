@@ -27,7 +27,7 @@ public class CirculacionService {
     private NotificacionClient notificacionClient;
 
     @Transactional
-    public void prestarLibro(UsuarioId usuarioId, LibroId libroId) {
+    public Prestamo prestarLibro(UsuarioId usuarioId, LibroId libroId) {
         Boolean libroDisponible = catalogoClient.isLibroDisponible(libroId.getLibroid_value());
 
         if (libroDisponible != null && libroDisponible) {
@@ -39,29 +39,36 @@ public class CirculacionService {
                     new FechaDevolucionPrevista(),
                     EstadoPrestamo.ACTIVO
             );
-            prestamoRepository.save(prestamo);
+            prestamo = prestamoRepository.save(prestamo);
 
             // Actualizar disponibilidad
             catalogoClient.actualizarDisponibilidad(libroId.getLibroid_value(), false);
             
             // Enviar notificacion
             notificacionClient.enviarNotificacion(new NotificacionDTO(usuarioId.getUsuarioid_value(), "Libro prestado: " + libroId.getLibroid_value()));
+            
+            return prestamo;
         } else {
             throw new LibroNoDisponibleException(libroId);
         }
     }
 
     @Transactional
-    public void devolverLibro(PrestamoId prestamoId) {
+    public Prestamo devolverLibro(PrestamoId prestamoId) {
         Prestamo prestamo = prestamoRepository.findById(prestamoId)
                 .orElseThrow(() -> new PrestamoNoEncontradoException(prestamoId));
 
         prestamo.setEstado(EstadoPrestamo.DEVUELTO);
-        prestamoRepository.save(prestamo);
+        prestamo = prestamoRepository.save(prestamo);
 
         catalogoClient.actualizarDisponibilidad(prestamo.getLibroId().getLibroid_value(), true);
 
-        notificacionClient.enviarNotificacion(new NotificacionDTO(prestamo.getUsuarioId().getUsuarioid_value(), "Libro devuelto: " + prestamo.getLibroId().getLibroid_value()));
+        notificacionClient.enviarNotificacion(new NotificacionDTO(
+            prestamo.getUsuarioId().getUsuarioid_value(), 
+            "Libro devuelto: " + prestamo.getLibroId().getLibroid_value()
+        ));
+
+        return prestamo;
     }
 
     public List<Prestamo> obtenerTodosPrestamos() {
