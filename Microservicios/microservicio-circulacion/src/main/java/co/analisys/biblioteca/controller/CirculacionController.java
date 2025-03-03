@@ -19,6 +19,12 @@ public class CirculacionController {
     @Autowired
     private CirculacionService circulacionService;
 
+    @Operation(
+        summary = "Prestar un libro a un usuario",
+        description = "Registra el préstamo de un libro a un usuario específico. " +
+                "Requiere rol de bibliotecario para ejecutar la operación. " +
+                "Verifica la disponibilidad del libro y el estado del usuario antes de realizar el préstamo."
+    )
     @PostMapping("/prestar")
     @PreAuthorize("hasRole('ROLE_LIBRARIAN')")
     public ResponseEntity<Prestamo> prestarLibro(@RequestParam String usuarioId, @RequestParam String libroId) {
@@ -26,6 +32,12 @@ public class CirculacionController {
         return ResponseEntity.ok(prestamo);
     }
 
+    @Operation(
+        summary = "Devolver un libro prestado",
+        description = "Registra la devolución de un libro previamente prestado. " +
+                "Requiere rol de bibliotecario para ejecutar la operación. " +
+                "Actualiza el estado del préstamo y la disponibilidad del libro."
+    )
     @PostMapping("/devolver")
     @PreAuthorize("hasRole('ROLE_LIBRARIAN')")
     public ResponseEntity<Prestamo> devolverLibro(@RequestParam String prestamoId) {
@@ -35,9 +47,9 @@ public class CirculacionController {
 
     @Operation(
         summary = "Consultar todos los préstamos",
-        description = "Este endpoint permite obtener una lista de todos los prestamos registrados en el sistema." +
-        "Es importante que el cliente esté registrado previamente en la base de datos, " +
-        "de lo contrario no podrá acceder a la información."
+        description = "Obtiene una lista de todos los préstamos registrados en el sistema. " +
+                "Accesible tanto para bibliotecarios como para usuarios registrados. " +
+                "Los préstamos incluyen información del libro, usuario y fechas correspondientes."
     )
     @GetMapping("/prestamos")
     @PreAuthorize("hasAnyRole('ROLE_LIBRARIAN', 'ROLE_USER')")
@@ -45,6 +57,11 @@ public class CirculacionController {
         return ResponseEntity.ok(circulacionService.obtenerTodosPrestamos());
     }
 
+    @Operation(
+        summary = "Verificar estado del servicio",
+        description = "Endpoint público que permite verificar si el servicio de circulación está funcionando correctamente. " +
+                "No requiere autenticación."
+    )
     @GetMapping("/public/status")
     public ResponseEntity<String> getPublicStatus() {
         return ResponseEntity.ok("El servicio de circulación está funcionando correctamente");

@@ -17,7 +17,7 @@ public class FeignConfig {
             if (authentication instanceof JwtAuthenticationToken jwtAuth) {
                 String token = jwtAuth.getToken().getTokenValue();
                 requestTemplate.header("Authorization", "Bearer " + token);
-                System.out.println("Token enviado: " + token); // 👀 Para verificar si el token se propaga
+                System.out.println("Token enviado: " + token);
             }
         };
     }
