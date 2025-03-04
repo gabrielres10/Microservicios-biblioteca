@@ -1,8 +1,3 @@
----
-title: README Biblioteca microservicios
-
----
-
 ## Integrantes
 - Gabriel Restrepo Giraldo
 - Luis Botero Roba
