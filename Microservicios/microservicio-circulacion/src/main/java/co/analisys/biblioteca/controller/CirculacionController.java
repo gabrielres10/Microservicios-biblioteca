@@ -27,9 +27,8 @@ public class CirculacionController {
     )
     @PostMapping("/prestar")
     @PreAuthorize("hasRole('ROLE_LIBRARIAN')")
-    public ResponseEntity<Prestamo> prestarLibro(@RequestParam String usuarioId, @RequestParam String libroId) {
-        Prestamo prestamo = circulacionService.prestarLibro(new UsuarioId(usuarioId), new LibroId(libroId));
-        return ResponseEntity.ok(prestamo);
+    public void prestarLibro(@RequestParam String usuarioId, @RequestParam String libroId) {
+        circulacionService.prestarLibro(new UsuarioId(usuarioId), new LibroId(libroId));
     }
 
     @Operation(
@@ -40,9 +39,8 @@ public class CirculacionController {
     )
     @PostMapping("/devolver")
     @PreAuthorize("hasRole('ROLE_LIBRARIAN')")
-    public ResponseEntity<Prestamo> devolverLibro(@RequestParam String prestamoId) {
-        Prestamo prestamo = circulacionService.devolverLibro(new PrestamoId(prestamoId));
-        return ResponseEntity.ok(prestamo);
+    public void devolverLibro(@RequestParam String prestamoId) {
+        circulacionService.devolverLibro(new PrestamoId(prestamoId));
     }
 
     @Operation(
